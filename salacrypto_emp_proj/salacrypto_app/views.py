@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
 
 from .forms import PlayerForm
 from .models import Cla, Classe, Player
@@ -10,7 +10,7 @@ def index(request):
 
 
 def all_player(request):
-    emps = Player.objects.all()
+    emps = Player.objects.filter(dono=request.user)
     context = {
         'emps': emps
     }
@@ -31,7 +31,22 @@ def add_player(request):
     context = {'form': form}
     return render(request, "add_player.html", context)
 
+def edit_player(request,player_id):
+    player = Player.objects.get(dono=request.user, pk=player_id)
+    if request.method == 'POST':
+        form = PlayerForm(request.POST, instance=player)
+        if form.is_valid():
+            player = form.save(commit=False)
+            player.save()
+            return redirect('/all_player')
+    else:
+        form = PlayerForm(instance=player)
+    context = {
+        'player': player,
+        'form': form
+    }
 
+    return render(request, 'edit_player.html', context)
 def remove_player(request):
     return render(request, 'remove_player.html')
 

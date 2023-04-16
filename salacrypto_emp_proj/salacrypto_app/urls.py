@@ -23,6 +23,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('all_player', views.all_player, name='all_player'),
     path('add_player', views.add_player, name='add_player'),
+    path('edit_player/<int:player_id>/', views.edit_player, name='edit_player'),
     path('remove_player', views.remove_player, name='remove_player'),
     path('filtro_player', views.filtro_player, name='filtro_player'),
     path('score', views.score, name='score'),
